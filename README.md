@@ -10,6 +10,8 @@ This project is an experimental implementation that explores the interaction bet
 
 The project uses **WART** (Web API Request Tool) to send **SignalR** messages from the backend REST API to the frontend, allowing the sphere to visually react to the API's state and the type of HTTP requests being processed.
 
+![Alt text](https://github.com/engineering87/reactive-orb/blob/main/ReactiveOrbDemo.gif)
+
 ## Features
 
 - **Real-Time Animation**: The orb changes color and undergoes distortion effects based on incoming events.
