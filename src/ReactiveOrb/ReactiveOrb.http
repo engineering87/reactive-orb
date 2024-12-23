@@ -1,0 +1,6 @@
+@ReactiveOrb_HostAddress = http://localhost:5031
+
+GET {{ReactiveOrb_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
