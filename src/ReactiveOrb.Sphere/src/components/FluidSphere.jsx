@@ -2,13 +2,14 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial, Sphere } from "@react-three/drei";
 import PropTypes from "prop-types";
-import * as THREE from 'three';
+import * as THREE from "three";
 
 const FluidSphere = ({ isConnected, eventType, eventCount }) => {
     const materialRef = useRef();
     const sphereRef = useRef();
     const [currentColor, setCurrentColor] = useState(new THREE.Color("#007bff"));
     const [intensity, setIntensity] = useState(0.4);
+    const [targetIntensity, setTargetIntensity] = useState(0.4); // Target intensity for gradual transition
     const [lastEventTime, setLastEventTime] = useState(Date.now());
 
     const getColorForEvent = useCallback((eventType) => {
@@ -34,7 +35,8 @@ const FluidSphere = ({ isConnected, eventType, eventCount }) => {
     useEffect(() => {
         if (eventType) {
             changeColor();
-            setIntensity(Math.min(0.5 + eventCount * 0.1, 0.8));
+            const newIntensity = Math.min(0.5 + eventCount * 0.1, 0.8);
+            setTargetIntensity(newIntensity); // Set target intensity for transition
             setLastEventTime(Date.now());
         }
     }, [eventType, eventCount, changeColor]);
@@ -43,8 +45,8 @@ const FluidSphere = ({ isConnected, eventType, eventCount }) => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now() - lastEventTime;
             if (timeElapsed > 5000) {
-                setCurrentColor(new THREE.Color("#007bff"));
-                setIntensity(0.4);
+                setCurrentColor(new THREE.Color("#007bff")); // Reset color
+                setTargetIntensity(0.4); // Reset intensity
             }
         }, 1000);
         return () => clearInterval(interval);
@@ -53,8 +55,20 @@ const FluidSphere = ({ isConnected, eventType, eventCount }) => {
     useFrame(({ clock }) => {
         if (materialRef.current) {
             const time = clock.getElapsedTime();
+
+            // Gradually interpolate the intensity towards the target value
+            setIntensity((prev) => THREE.MathUtils.lerp(prev, targetIntensity, 0.02));
+
+            // Update distort and speed
             materialRef.current.distort = intensity + Math.sin(time * 2) * 0.2;
             materialRef.current.speed = isConnected ? 2 + eventCount * 0.5 : 0.5;
+
+            // Gradual color transition
+            const targetColor = new THREE.Color(isConnected ? "#007bff" : "#6c757d");
+            currentColor.lerp(targetColor, 0.005); // Gradually interpolate towards the target color
+            materialRef.current.color = currentColor;
+
+            // Sphere rotation
             sphereRef.current.rotation.y += 0.01;
         }
     });
