@@ -8,7 +8,9 @@
 
 This project is an experimental implementation that explores the interaction between **REST APIs** and **advanced graphical animations** using a dynamic **orb (sphere)**. The sphere changes its appearance and behavior in real-time based on **SignalR events** received from the API, and responds to different **HTTP methods** invoked on the API (such as `GET`, `POST`, `PUT`, and `DELETE`).
 
-The project uses **WART** (Web API Request Tool) to send **SignalR** messages from the backend REST API to the frontend, allowing the sphere to visually react to the API's state and the type of HTTP requests being processed.
+The project uses **WART** to send **SignalR** messages from the backend REST API to the frontend, allowing the sphere to visually react to the API's state and the type of HTTP requests being processed.
+
+![Alt text](https://github.com/engineering87/reactive-orb/blob/main/ReactiveOrbDemo.gif)
 
 ## Features
 
