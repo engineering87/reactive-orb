@@ -7,6 +7,9 @@ const SignalRService = ({ onEventReceived, onConnectionStatusChange }) => {
     const connectionRef = useRef(null); // Reference to store the SignalR connection
 
     useEffect(() => {
+        if (connectionRef.current) {
+            return; // Prevent creating a new connection if one already exists
+        }
         // Create the SignalR connection
         const hubConnection = new HubConnectionBuilder()
             .withUrl("https://localhost:7159/ReactiveOrbHub", {
@@ -37,6 +40,7 @@ const SignalRService = ({ onEventReceived, onConnectionStatusChange }) => {
         const stopConnection = () => {
             if (hubConnection.state === 'Connected') {
                 hubConnection.stop(); // Stop the connection
+                connectionRef.current = null;
                 onConnectionStatusChange(false);  // Notify parent component that the connection has been stopped
             }
         };
